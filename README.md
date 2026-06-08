@@ -5,6 +5,18 @@
 
 ---
 
+# 🌐 Live Application
+
+<div align="center">
+
+### Experience Agent Forge OS Live
+
+[![Launch Agent Forge](https://img.shields.io/badge/🚀%20Launch%20Agent%20Forge-Live%20Application-blueviolet?style=for-the-badge)](https://agent-forge-becc.onrender.com/)
+
+*💡 Tip: Ctrl + Click (or Cmd + Click on Mac) to open the dashboard in a new tab.*
+
+</div>
+
 ## 📌 Overview
 
 Agent Forge OS is an automated AI agent creation and deployment platform that processes unstructured logs, invoices, and logistical narratives, then intelligently routes data payloads across live Google Workspace instances and secure SMTP networks.
