@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Forge | Secure Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color Palette */
+            --bg-black: #050505;
+            --box-bg: #121212;
+            --input-bg: #1a1a1a;
+            --border-color: #2a2a2a;
+            
+            /* Pale Red Theme */
+            --pale-red: #e06666;
+            --pale-red-hover: #ea7a7a;
+            --pale-red-muted: rgba(224, 102, 102, 0.1);
+            
+            /* Text Colors */
+            --text-white: #ffffff;
+            --text-muted: #8b8b8b;
+            --text-dark: #a0a0a0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            
+            /* Abstract Background Design - Dark & Pale Red */
+            background-image: 
+                radial-gradient(circle at 15% 0%, rgba(224, 102, 102, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 100%, rgba(224, 102, 102, 0.05) 0%, transparent 40%);
+        }
+
+        /* Abstract Grid Overlay */
+        .bg-grid {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(var(--border-color) 1px, transparent 1px),
+                              linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        /* The Main Auth Box */
+        .auth-container {
+            background: var(--box-bg);
+            border: 1px solid var(--border-color);
+            padding: 48px 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            box-sizing: border-box;
+            transform: translateY(20px);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); opacity: 1; }
+            from { transform: translateY(30px); opacity: 0; }
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-white);
+        }
+
+        .header h1 span {
+            color: var(--pale-red);
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        /* Form Layout */
+        .form-group {
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-white);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-group input::placeholder {
+            color: #4a4a4a;
+        }
+
+        .form-group input:focus {
+            border-color: var(--pale-red);
+            background: #1e1e1e;
+            /* Replaced glow with a sharp, professional focus ring */
+            box-shadow: 0 0 0 4px var(--pale-red-muted); 
+        }
+
+        /* Button Styling */
+        button.btn {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--pale-red);
+            color: var(--bg-black); /* Dark text on light button for contrast */
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+            font-family: inherit;
+        }
+
+        button.btn:hover {
+            background-color: var(--pale-red-hover);
+            transform: translateY(-2px);
+        }
+
+        button.btn:active {
+            transform: translateY(0);
+        }
+
+        /* Flash Messages */
+        .flash-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .flash-error { 
+            background: rgba(224, 102, 102, 0.1); 
+            border: 1px solid rgba(224, 102, 102, 0.3); 
+            color: var(--pale-red); 
+        }
+        .flash-success { 
+            background: rgba(134, 239, 172, 0.1); 
+            border: 1px solid rgba(134, 239, 172, 0.3); 
+            color: #86efac; 
+        }
+
+        /* Toggle Link */
+        .toggle-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .toggle-link a {
+            color: var(--text-white);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+            margin-left: 4px;
+        }
+
+        .toggle-link a:hover {
+            color: var(--pale-red);
+        }
+
+        /* Hide register form initially */
+        #register-form { 
+            display: none; 
+        }
+
+        /* Animation class for toggling */
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <div class="auth-container">
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form id="login-form" method="POST" action="/" class="fade-in">
+            <div class="header">
+                <h1>Agent <span>Forge</span></h1>
+                <p>Sign in to your workspace</p>
+            </div>
+
+            <input type="hidden" name="action" value="login">
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" required placeholder="Enter your username">
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+            
+            <button type="submit" class="btn">Sign In</button>
+            
+            <div class="toggle-link">
+                Don't have an account? <a onclick="toggleForms()">Register</a>
+            </div>
+        </form>
+
+        <form id="register-form" method="POST" action="/" class="fade-in">
+            <div class="header">
+                <h1>Create <span>Account</span></h1>
+                <p>Set up your agent workspace</p>
+            </div>
+
+            <input type="hidden" name="action" value="register">
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="reg_username" required placeholder="Choose a username">
+            </div>
+            
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="reg_email" required placeholder="name@company.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="reg_password" required placeholder="Create a secure password">
+            </div>
+            
+            <button type="submit" class="btn">Create Account</button>
+            
+            <div class="toggle-link">
+                Already registered? <a onclick="toggleForms()">Sign In</a>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            
+            if (loginForm.style.display === 'none') {
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

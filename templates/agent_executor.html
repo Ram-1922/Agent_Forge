@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Agent | InFynd OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #050505;
+            --box-bg: #121212;
+            --input-bg: #1a1a1a;
+            --border-color: #2a2a2a;
+            --pale-red: #e06666;
+            --pale-red-hover: #ea7a7a;
+            --pale-red-muted: rgba(224, 102, 102, 0.1);
+            --text-white: #ffffff;
+            --text-muted: #8b8b8b;
+            --text-dark: #a0a0a0;
+            --success: #4ade80;
+            --success-muted: rgba(74, 222, 128, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at 15% 0%, rgba(224, 102, 102, 0.05) 0%, transparent 40%);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(#2a2a2a 1px, transparent 1px), linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(18, 18, 18, 0.8);
+            border-bottom: 1px solid #2a2a2a;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .header-logo span {
+            color: #e06666;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .header-nav a {
+            color: #8b8b8b;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .header-nav a:hover,
+        .header-nav a.active {
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            padding: 8px 16px;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            color: #8b8b8b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            border-color: #e06666;
+            color: #e06666;
+            background: rgba(224, 102, 102, 0.1);
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 40px 5%;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+        }
+
+        .page-title p {
+            color: #8b8b8b;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .card {
+            background: #121212;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        select,
+        textarea,
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 15px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+
+        select:focus,
+        textarea:focus,
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #e06666;
+            background: #1e1e1e;
+        }
+
+        .upload-zone {
+            border: 2px dashed #2a2a2a;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            background: rgba(26, 26, 26, 0.5);
+            cursor: pointer;
+            transition: 0.2s;
+            display: block;
+        }
+
+        .upload-zone:hover {
+            border-color: #e06666;
+            background: rgba(224, 102, 102, 0.05);
+        }
+
+        .upload-zone p {
+            margin: 0;
+            color: #8b8b8b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .upload-zone span {
+            color: #e06666;
+            font-weight: 600;
+        }
+
+        #file-display {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .guardrail-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 16px;
+            background: rgba(224, 102, 102, 0.05);
+            border: 1px solid rgba(224, 102, 102, 0.3);
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        .guardrail-text h4 {
+            margin: 0 0 4px 0;
+            color: #e06666;
+            font-size: 14px;
+        }
+
+        .guardrail-text p {
+            margin: 0;
+            color: #8b8b8b;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2a2a2a;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #e06666;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #e06666;
+            color: #050505;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #ea7a7a;
+            transform: translateY(-2px);
+        }
+
+        .terminal {
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-left: 3px solid #4ade80;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            color: #4ade80;
+            line-height: 1.6;
+            font-size: 13px;
+            margin-top: 20px;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        /* RESULT REPORT CARD */
+        .result-box {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            padding: 20px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 15px;
+            white-space: pre-wrap;
+            margin-top: 20px;
+            color: #e0e0e0;
+        }
+
+        .composer-card {
+            display: none;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        #loader {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: #e06666;
+            font-size: 14px;
+            font-weight: 600;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+
+    <header class="header">
+        <a href="/dashboard" class="header-logo">Agent <span>Forge</span></a>
+        <nav class="header-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/build">Agent Studio</a>
+            <a href="/run" class="active">Deploy</a>
+        </nav>
+        <div class="header-right"><a href="/logout" class="btn-logout">Sign Out</a></div>
+    </header>
+
+    <main class="main-container">
+
+        <div class="page-title">
+            <h1>Deploy Agent</h1>
+            <p>Configure parameters, provide context, and initiate autonomous execution.</p>
+        </div>
+
+        <div class="card">
+            <form method="POST" action="/run" enctype="multipart/form-data" onsubmit="showLoader()">
+                <!-- THE DROPDOWN: Added onchange event -->
+                <div class="form-group">
+                    <label>Select Agent Architecture</label>
+                    <select name="agent_name" id="agent-select" required onchange="updateDynamicFields()">
+                        <option value="" disabled selected>-- Select an Agent from Database --</option>
+                        {% for agent in agents %}
+                            <option value="{{ agent }}">{{ agent }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- DYNAMIC FIELDS: Completely hidden until JavaScript reveals them -->
+                <div id="email-group" class="form-group" style="display: none; border-left: 3px solid #e06666; padding-left: 10px;">
+                    <label>Google App Password (Required for Email Tool)</label>
+                    <input type="password" name="app_password" placeholder="Enter your 16-character App Password">
+                </div>
+
+                <div id="sheet-group" class="form-group" style="display: none; border-left: 3px solid #4ade80; padding-left: 10px;">
+                    <label>Spreadsheet Collaborative Link</label>
+                    <input type="text" name="sheet_link" placeholder="e.g., https://docs.google.com/spreadsheets/d/...">
+                </div>
+
+                <div id="doc-group" class="form-group" style="display: none; border-left: 3px solid #60a5fa; padding-left: 10px;">
+                    <label>Google Doc Collaborative Link</label>
+                    <input type="text" name="doc_link" placeholder="e.g., https://docs.google.com/document/d/...">
+                </div>
+
+                <div id="slide-group" class="form-group" style="display: none; border-left: 3px solid #facc15; padding-left: 10px;">
+                    <label>Google Slides Collaborative Link</label>
+                    <input type="text" name="slide_link" placeholder="e.g., https://docs.google.com/presentation/d/...">
+                </div>
+
+                <div class="form-group">
+                    <label>Task Description / Override Instructions</label>
+                    <textarea name="prompt"
+                        placeholder="E.g., Focus only on candidates with 5+ years of experience. Be polite in the email..."
+                        required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Knowledge Context (Upload)</label>
+                    <label class="upload-zone" for="file-upload">
+                        <p>Drag and drop or <span>browse</span> to upload documents</p>
+                        <div id="file-display"></div>
+                    </label>
+                    <input type="file" id="file-upload" name="reference_file" style="display: none;"
+                        onchange="updateFileName(this)">
+                </div>
+
+                <div class="guardrail-box">
+                    <label class="switch">
+                        <input type="checkbox" name="auth_checkbox" required>
+                        <span class="slider"></span>
+                    </label>
+                    <div class="guardrail-text">
+                        <h4>Security Guardrail Authorization</h4>
+                        <p>I authorize this AI agent to perform external actions autonomously based on my instructions.
+                        </p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Initiate Autonomous Loop</button>
+                <div id="loader">⚙️ Agent is initializing... analyzing parameters...</div>
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="card" style="border-color: rgba(74, 222, 128, 0.4);">
+            <h2 style="margin-top: 0; font-size: 20px; display: flex; align-items: center; gap: 8px;">
+                <span style="color: #4ade80;">●</span> Final Agent Analysis
+            </h2>
+
+            <div class="result-box">
+                {{ result.response }}
+            </div>
+
+            <h2 style="margin-top: 30px; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                <span style="color: #4ade80;">●</span> Execution Audit Log
+            </h2>
+            <div class="terminal">
+                {% for log in result.logs %}
+                <div>> {{ log }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="post-action-panel">
+                <h3 style="margin-top:0; font-size:16px;">Human-in-the-Loop Actions</h3>
+                <p style="color:#8b8b8b; font-size:13px; margin-bottom:15px;">Need to send a manual follow-up or
+                    override the AI? Draft an email directly from the terminal.</p>
+
+                <button type="button" class="btn-logout" onclick="toggleEmailComposer()"
+                    style="color: #ffffff; border-color: #ffffff;">+ Draft Manual Email</button>
+
+                <div class="composer-card" id="email-composer">
+                    <div class="composer-header">
+                        <h3>Compose Template</h3>
+                        <span style="cursor:pointer; color:#8b8b8b;" onclick="toggleEmailComposer()">✕</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>To:</label>
+                        <input type="text" value="{{ result.extracted_email }}"
+                            placeholder="Recipient Email (e.g., candidate@domain.com)">
+                    </div>
+                    <div class="form-group"><input type="text" placeholder="Subject line"></div>
+                    <div class="form-group">
+                        <textarea id="email-body" placeholder="Write your email template here..."
+                            style="min-height: 120px;">
+        {{ result.draft_body }}
+    </textarea>
+                    </div>
+
+                    <button type="button" class="btn" style="padding: 12px; font-size: 14px;"
+                        onclick="alert('Demo Mode: Manual email queued for sending!')">Send Email</button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <script>
+
+        function showLoader() { document.getElementById('loader').style.display = 'block'; }
+        function updateFileName(input) {
+            const display = document.getElementById('file-display');
+            if (input.files && input.files.length > 0) { display.innerHTML = '📄 ' + input.files[0].name; }
+        }
+        function toggleEmailComposer() {
+            const composer = document.getElementById('email-composer');
+            composer.style.display = composer.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // This forces JavaScript to safely parse the stringified JSON from Flask
+        const rawData = '{{ agent_tools_json | safe }}';
+        const agentToolsMap = rawData ? JSON.parse(rawData) : {};
+
+        function updateDynamicFields() {
+            const selectedAgent = document.getElementById('agent-select').value;
+            const toolsArray = agentToolsMap[selectedAgent] || [];
+            // Convert to a single lowercase string for easy checking
+            const toolsStr = toolsArray.join(' ').toLowerCase();
+
+            // 1. Hide everything first
+            document.getElementById('email-group').style.display = 'none';
+            document.getElementById('sheet-group').style.display = 'none';
+            document.getElementById('doc-group').style.display = 'none';
+            document.getElementById('slide-group').style.display = 'none';
+
+            // 2. Reveal only what is needed based on tool keywords
+            if (toolsStr.includes('email') || toolsStr.includes('mail')) {
+                document.getElementById('email-group').style.display = 'block';
+            }
+            if (toolsStr.includes('spreadsheet') || toolsStr.includes('sheet') || toolsStr.includes('csv')) {
+                document.getElementById('sheet-group').style.display = 'block';
+            }
+            if (toolsStr.includes('doc') || toolsStr.includes('writer')) {
+                document.getElementById('doc-group').style.display = 'block';
+            }
+            if (toolsStr.includes('slide') || toolsStr.includes('presentation')) {
+                document.getElementById('slide-group').style.display = 'block';
+            }
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manage Agents | InFynd OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { background: #050505; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; padding: 50px; }
+        .card { background: #121212; padding: 20px; border: 1px solid #2a2a2a; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-delete { background: #e06666; color: #000; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .btn-delete:hover { background: #ea7a7a; }
+        a { color: #8b8b8b; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <a href="/dashboard">← Back to Dashboard</a>
+    <h1>Agent Database</h1>
+    {% for agent in agents %}
+        <div class="card">
+            <span style="font-size: 18px; font-weight: bold;">🤖 {{ agent }}</span>
+            <form method="POST" style="margin: 0;">
+                <input type="hidden" name="delete_agent" value="{{ agent }}">
+                <button type="submit" class="btn-delete">Delete Agent</button>
+            </form>
+        </div>
+    {% else %}
+        <p style="color: #8b8b8b;">No agents found in database.</p>
+    {% endfor %}
+</body>
+</html>
